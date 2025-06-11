@@ -288,18 +288,17 @@ def render_navigation_buttons():
 def render_receveur_page():
     st.markdown('<div class="page-header"><h1><i class="fas fa-user-injured"></i> Informations sur le Receveur</h1><p>Détails personnels et administratifs du patient receveur.</p></div>', unsafe_allow_html=True)
     if st.session_state.edit_mode:
-        st.info(f"**Mode Modification** | Vous modifiez le dossier du patient **{st.session_state.get('receveur_nom')} {st.session_state.get('receveur_prenom')}** (IPP: **{st.session_state.get('receveur_ipp')}**)")
-        st.text_input("IPP", st.session_state.receveur_ipp, disabled=True)
-    else:
-        st.warning("⚠️ L'IPP est obligatoire et sera utilisé pour créer le dossier du patient.")
-        st.session_state.receveur_ipp = st.text_input("IPP", st.session_state.receveur_ipp)
+        st.info(f"**Mode Modification** | Vous modifiez le dossier du patient **{st.session_state.get('receveur_nom')}{st.session_state.get('receveur_prenom')}** (IPP: **{st.session_state.get('receveur_ipp')}**)")
+
+       
 
     with st.container(border=True):
-        st.subheader("Détails du Receveur") # st.subheader will be styled by h3
+        st.subheader("Informations sur le Receveur :") # st.subheader will be styled by h3
         col1, col2 = st.columns(2)
         with col1:
-            st.session_state.receveur_nom = st.text_input("Nom", st.session_state.receveur_nom)
-            st.session_state.receveur_prenom = st.text_input("Prénom", st.session_state.receveur_prenom)
+            st.session_state.receveur_ipp = st.text_input("IPP", st.session_state.receveur_ipp, placeholder="Entrez l'IPP")
+            st.session_state.receveur_nom = st.text_input("Nom", st.session_state.receveur_nom, placeholder="Entrez le nom")
+            st.session_state.receveur_prenom = st.text_input("Prénom", st.session_state.receveur_prenom, placeholder="Entrez le prénom")
             st.session_state.receveur_date_naissance = st.date_input("Date de Naissance", st.session_state.receveur_date_naissance)
         with col2:
             st.session_state.receveur_sexe = st.radio("Sexe", ["Homme", "Femme"], index=["Homme", "Femme"].index(st.session_state.receveur_sexe), horizontal=True)
@@ -310,104 +309,394 @@ def render_receveur_page():
     with st.container(border=True):
         st.subheader("Informations Parents du Receveur")
         col_p1, col_p2 = st.columns(2);
-        with col_p1: st.session_state.receveur_nom_pere = st.text_input("Nom du Père", st.session_state.receveur_nom_pere); st.session_state.receveur_nom_mere = st.text_input("Nom de la Mère", st.session_state.receveur_nom_mere)
-        with col_p2: st.session_state.receveur_age_pere = st.number_input("Âge du Père", 0, 120, st.session_state.receveur_age_pere); st.session_state.receveur_age_mere = st.number_input("Âge de la Mère", 0, 120, st.session_state.receveur_age_mere)
+        with col_p1: st.session_state.receveur_nom_pere = st.text_input("Nom du Père du Receveur", st.session_state.receveur_nom_pere); st.session_state.receveur_nom_mere = st.text_input("Nom de la Mère du Receveur", st.session_state.receveur_nom_mere)
+        with col_p2: st.session_state.receveur_age_pere = st.number_input("Âge du Père du Receveur", 0, 120, st.session_state.receveur_age_pere); st.session_state.receveur_age_mere = st.number_input("Âge de la Mère du Receveur", 0, 120, st.session_state.receveur_age_mere)
 
 def render_donneur_page():
     st.markdown('<div class="page-header"><h1><i class="fas fa-user-friends"></i> Informations sur le Donneur</h1><p>Détails personnels du donneur potentiel.</p></div>', unsafe_allow_html=True)
     with st.container(border=True):
-        st.subheader("Détails du Donneur")
+        st.subheader("Informations sur le Donneur : ")
         col1, col2 = st.columns(2)
         with col1: st.session_state.donneur_nom = st.text_input("Nom du Donneur", st.session_state.donneur_nom); st.session_state.donneur_prenom = st.text_input("Prénom du Donneur", st.session_state.donneur_prenom)
         with col2: st.session_state.donneur_date_naissance = st.date_input("Date de Naissance du Donneur", st.session_state.donneur_date_naissance); st.session_state.donneur_sexe = st.radio("Sexe du Donneur", ["Homme", "Femme"], index=["Homme", "Femme"].index(st.session_state.donneur_sexe), horizontal=True)
-        # Add other donor fields if any, like groupage, address, contacts etc.
-        # st.session_state.donneur_groupage = st.selectbox("Groupage Sanguin Donneur", ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], index=["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].index(st.session_state.donneur_groupage))
-        # st.session_state.donneur_adresse = st.text_area("Adresse Donneur", st.session_state.donneur_adresse, height=100)
+        st.session_state.donneur_groupage = st.selectbox("Groupage Sanguin Donneur", ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], index=["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].index(st.session_state.donneur_groupage))
+        st.session_state.donneur_contact_principal = st.text_input("Contact Principal", st.session_state.donneur_contact_principal)
+        st.session_state.donneur_organisme = st.selectbox("Organisme Payeur", ["PAYANT", "CNAM", "CNOPS", "AXA", "FAR- Sociales", "Autre"], index=["PAYANT", "CNAM", "CNOPS", "AXA", "FAR- Sociales", "Autre"].index(st.session_state.donneur_organisme))
+        st.session_state.donneur_adresse = st.text_area("Adresse Donneur", st.session_state.donneur_adresse, height=100)
+    with st.container(border=True):
+        st.subheader("Informations Parents du Donneur")
+        col_p1, col_p2 = st.columns(2)
+        with col_p1: st.session_state.donneur_nom_pere = st.text_input("Nom du Père du donneur", st.session_state.donneur_nom_pere); st.session_state.donneur_nom_mere = st.text_input("Nom de la Mère du donneur", st.session_state.donneur_nom_mere)
+        with col_p2: st.session_state.donneur_age_pere = st.number_input("Âge du Père du donneur", 0, 120, st.session_state.donneur_age_pere); st.session_state.donneur_age_mere = st.number_input("Âge de la Mère du donneur", 0, 120, st.session_state.donneur_age_mere)
+
+import streamlit as st
+import pandas as pd
+import os
+
+# --- Éléments de Simulation (à remplacer par vos vraies données) ---
+# Simule la liste de documents que vous aviez probablement
+ADMIN_DOCS_LIST = [
+    "Copie de la CIN",
+    "Passeport",
+    "Justificatif de domicile",
+    "Formulaire de demande",
+    "Extrait de casier judiciaire"
+]
+
+# Simule votre fonction pour sauvegarder un fichier
+def save_uploaded_file(uploaded_file, sub_directory):
+    # Crée un répertoire de sauvegarde s'il n'existe pas
+    save_path = os.path.join("uploads", sub_directory)
+    os.makedirs(save_path, exist_ok=True)
+    
+    # Crée un chemin de fichier unique
+    file_path = os.path.join(save_path, uploaded_file.name)
+    
+    # Écrit le fichier sur le disque
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    
+    # Retourne le chemin où le fichier a été sauvegardé
+    return file_path
+
+# Simule l'initialisation de st.session_state pour le test
+if 'receveur_ipp' not in st.session_state:
+    st.session_state.receveur_ipp = "USER_12345" # Mettez une valeur pour tester
+if 'accord_tribunal' not in st.session_state:
+    st.session_state.accord_tribunal = "En cours"
+# --- Fin des Éléments de Simulation ---
+
 
 def render_tribunaux_page():
-    st.markdown('<div class="page-header"><h1><i class="fas fa-gavel"></i> Dossier Tribunal</h1><p>Suivi de l\'accord du tribunal et documents requis.</p></div>', unsafe_allow_html=True)
+    """
+    Affiche la page de gestion des documents administratifs pour les tribunaux
+    avec un tableau de suivi et un champ de téléversement multiple.
+    """
+    st.markdown('<div class="page-header"><h1><i class="fas fa-gavel"></i> Documents Administratifs Tribunaux </h1><p>Suivi de l\'accord du tribunal et documents requis.</p></div>', unsafe_allow_html=True)
+    
+    # Vérification essentielle avant de continuer
+    if not st.session_state.get('receveur_ipp'):
+        st.error("Veuillez renseigner l'IPP du receveur à l'étape 1 pour continuer.")
+        return
+
+    # --- Section 1: Tableau de Suivi des Documents ---
+    with st.container(border=True):
+        st.subheader("Suivi des Documents Requis")
+        st.write("Cochez le statut de chaque document ci-dessous.")
+
+        # Initialisation du DataFrame dans st.session_state s'il n'existe pas
+        if 'doc_status_df' not in st.session_state:
+            df_data = {
+                "Document": ADMIN_DOCS_LIST,
+                "Présent": [False] * len(ADMIN_DOCS_LIST),
+                "Absent": [True] * len(ADMIN_DOCS_LIST)
+            }
+            st.session_state.doc_status_df = pd.DataFrame(df_data)
+
+        # Affiche le tableau éditable avec st.data_editor
+        edited_df = st.data_editor(
+            st.session_state.doc_status_df,
+            column_config={
+                "Document": st.column_config.TextColumn("Nom du Document", disabled=True),
+                "Présent": st.column_config.CheckboxColumn("Document Présent ?", required=True),
+                "Absent": st.column_config.CheckboxColumn("Document Absent ?", required=True),
+            },
+            hide_index=True,
+            key="doc_status_editor"
+        )
+
+        # Logique pour s'assurer qu'une seule case est cochée par ligne
+        # On compare le DataFrame édité avec celui en mémoire
+        if not edited_df.equals(st.session_state.doc_status_df):
+            # Parcourir les lignes pour trouver les changements
+            for i in edited_df.index:
+                old_row = st.session_state.doc_status_df.loc[i]
+                new_row = edited_df.loc[i]
+                
+                # Cas 1: L'utilisateur a coché "Présent"
+                if new_row['Présent'] and not old_row['Présent']:
+                    edited_df.at[i, 'Absent'] = False # Décocher automatiquement "Absent"
+                # Cas 2: L'utilisateur a coché "Absent"
+                elif new_row['Absent'] and not old_row['Absent']:
+                    edited_df.at[i, 'Présent'] = False # Décocher automatiquement "Présent"
+                # Cas 3: Si les deux sont décochés (par ex. par erreur), on remet "Absent" par défaut
+                elif not new_row['Présent'] and not new_row['Absent']:
+                     edited_df.at[i, 'Absent'] = True
+
+            # Mettre à jour le session_state et relancer l'affichage
+            st.session_state.doc_status_df = edited_df
+            st.rerun()
+
+    # --- Section 2: Téléversement des Fichiers ---
+    with st.container(border=True):
+        st.subheader("Téléverser les Documents")
+
+        # Récupérer la liste des documents marqués comme "Présents"
+        docs_a_fournir = edited_df[edited_df["Présent"]]["Document"].tolist()
+
+        if not docs_a_fournir:
+            st.info("Aucun document n'est marqué comme 'Présent'. Cochez la case correspondante dans le tableau pour pouvoir téléverser.")
+        else:
+            st.write("Veuillez joindre les fichiers pour les documents suivants :")
+            # Affiche une liste à puces des documents attendus
+            for doc_name in docs_a_fournir:
+                st.markdown(f"- **{doc_name}**")
+            
+            # Champ de téléversement multiple ("drag and drop")
+            uploaded_files = st.file_uploader(
+                "Glissez et déposez TOUS les documents ici",
+                type=['pdf', 'jpg', 'png', 'jpeg'],
+                accept_multiple_files=True,
+                key="multi_file_uploader"
+            )
+
+            if uploaded_files:
+                st.write("---")
+                st.success(f"{len(uploaded_files)} fichier(s) prêt(s) à être traité(s).")
+                # Ici, vous pouvez ajouter la logique pour sauvegarder les fichiers
+                for file in uploaded_files:
+                    # On utilise la fonction de sauvegarde simulée
+                    saved_path = save_uploaded_file(file, "tribunal")
+                    st.write(f"✅ Fichier '{file.name}' sauvegardé avec succès dans `{saved_path}`")
+                
+                # Optionnel : Ajouter un bouton pour finaliser ou confirmer
+                if st.button("Confirmer et terminer le téléversement"):
+                    st.balloons()
+                    st.success("Tous les documents ont été enregistrés.")
+
+    # --- Section 3: Statut de l'Accord ---
     with st.container(border=True):
         st.subheader("Statut de l'Accord")
-        st.session_state.accord_tribunal = st.selectbox("Statut de l'accord du Tribunal", ["En cours", "Accordé", "Refusé"], index=["En cours", "Accordé", "Refusé"].index(st.session_state.accord_tribunal))
-    
-    with st.container(border=True):
-        st.subheader("Documents Administratifs Requis")
-        if not st.session_state.receveur_ipp: st.error("Veuillez renseigner l'IPP du receveur à l'étape 1 pour joindre des fichiers."); return
-        cols = st.columns(2)
-        for i, doc in enumerate(ADMIN_DOCS_LIST):
-            doc_key = f"admin_doc_{doc.lower().replace(' ', '_').replace('(', '').replace(')', '')}_upload"
-            with cols[i % 2]:
-                # Display existing file path or placeholder
-                file_display_name = os.path.basename(st.session_state[doc_key]) if st.session_state.get(doc_key) and isinstance(st.session_state.get(doc_key), str) else "Aucun fichier"
-                
-                # Use an expander for cleaner UI if there's an existing file
-                if st.session_state.get(doc_key) and isinstance(st.session_state.get(doc_key), str):
-                    with st.expander(f"{doc} (Actuel: {file_display_name})", expanded=False):
-                        st.caption(f"Chemin complet: {st.session_state[doc_key]}")
-                        uploaded_file = st.file_uploader(f"Remplacer: {doc}", type=['pdf', 'jpg', 'png'], key=f"uploader_{doc_key}_replace")
-                        if uploaded_file:
-                            st.session_state[doc_key] = save_uploaded_file(uploaded_file, "tribunal")
-                            st.rerun() # Rerun to update display
-                else:
-                    uploaded_file = st.file_uploader(f"Joindre: {doc}", type=['pdf', 'jpg', 'png'], key=f"uploader_{doc_key}_new")
-                    if uploaded_file:
-                        st.session_state[doc_key] = save_uploaded_file(uploaded_file, "tribunal")
-                        st.rerun() # Rerun to update display
-                # Simple display if no expander
-                # if st.session_state.get(doc_key) and isinstance(st.session_state.get(doc_key), str):
-                #    st.success(f"Fichier existant pour {doc}: '{os.path.basename(st.session_state[doc_key])}'")
-                # uploaded_file = st.file_uploader(f"Joindre/Remplacer: {doc}", type=['pdf', 'jpg', 'png'], key=f"uploader_{doc_key}")
-                # if uploaded_file:
-                #    st.session_state[doc_key] = save_uploaded_file(uploaded_file, "tribunal")
-                #    st.rerun()
+        current_status = st.session_state.get('accord_tribunal', "En cours")
+        st.session_state.accord_tribunal = st.selectbox(
+            "Statut de l'accord du Tribunal",
+            ["En cours", "Accordé", "Refusé"],
+            index=["En cours", "Accordé", "Refusé"].index(current_status)
+        )
+import streamlit as st
+import pandas as pd
 
+# --- Éléments de Simulation (à remplacer par vos vraies données) ---
+
+# La liste des examens que vous avez fournie
+MEDICAL_EXAMS_LIST = [
+    "Echographie abdominale + images",
+    "Echographie cardiaque + images",
+    "Rx Thorax",
+    "Antigène HLA I et II",
+    "Bilan biologique + sérologies",
+    "Observation médicale",
+    "Myélogramme",
+    "Caryotype hématologique",
+    "Immunophénotypage",
+    "FISH",
+    "Biologie moléculaire"
+]
+
+# --- Fin des Éléments de Simulation ---
 
 def render_medical_page():
+    """
+    Affiche la page du dossier médical avec une check-list sous forme de tableau interactif.
+    """
     st.markdown('<div class="page-header"><h1><i class="fas fa-file-medical-alt"></i> Dossier Médical</h1><p>Check-list des examens médicaux pré-greffe.</p></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.subheader("Statut des Examens Médicaux")
-        # Consider a more compact layout if many exams
-        num_cols = 3 # Adjust as needed
-        cols = st.columns(num_cols)
-        for i, exam in enumerate(MEDICAL_EXAMS_LIST):
-            exam_key = f"medical_exam_{exam.lower().replace(' ', '_').replace('é', 'e').replace('è', 'e')}"
-            with cols[i % num_cols]:
-                 st.checkbox(exam, value=st.session_state.get(exam_key, False), key=exam_key) # Assign key directly
-
-def render_ministere_page():
-    st.markdown('<div class="page-header"><h1><i class="fas fa-landmark"></i> Dossier Ministère</h1><p>Suivi de l\'accord du ministère et documents associés.</p></div>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.subheader("Statut de l'Accord")
-        st.session_state.accord_ministere = st.selectbox("Statut de l'accord du Ministère", ["En cours", "Accordé", "Refusé"], index=["En cours", "Accordé", "Refusé"].index(st.session_state.accord_ministere))
     
     with st.container(border=True):
-        st.subheader("Documents Requis pour le Ministère")
-        if not st.session_state.receveur_ipp: st.error("Veuillez renseigner l'IPP du receveur à l'étape 1 pour joindre des fichiers."); return
-        cols = st.columns(2)
-        for i, doc in enumerate(MINISTERE_DOCS_LIST):
-            doc_key = f"ministere_doc_{doc.lower().replace(' ', '_').replace('è', 'e')}_upload"
-            with cols[i % 2]:
-                if st.session_state.get(doc_key) and isinstance(st.session_state.get(doc_key), str):
-                    st.success(f"Fichier existant: '{os.path.basename(st.session_state[doc_key])}'")
-                uploaded_file = st.file_uploader(f"Joindre/Remplacer: {doc}", type=['pdf', 'jpg', 'png'], key=f"uploader_{doc_key}")
-                if uploaded_file:
-                    st.session_state[doc_key] = save_uploaded_file(uploaded_file, "ministere")
-                    st.rerun()
+        st.subheader("Statut des Examens Médicaux")
+        st.write("Cochez le statut de chaque examen dans le tableau ci-dessous.")
+
+        # Initialisation du DataFrame dans st.session_state s'il n'existe pas
+        # C'est ici que nous créons la structure du tableau pour la première fois.
+        if 'medical_exams_df' not in st.session_state:
+            df_data = {
+                "Examen": MEDICAL_EXAMS_LIST,
+                "Fait": [False] * len(MEDICAL_EXAMS_LIST),
+                "Non Fait": [True] * len(MEDICAL_EXAMS_LIST) # Par défaut, rien n'est fait
+            }
+            st.session_state.medical_exams_df = pd.DataFrame(df_data)
+
+        # Affichage du tableau éditable avec st.data_editor
+        # L'utilisateur interagit directement avec ce tableau.
+        edited_df = st.data_editor(
+            st.session_state.medical_exams_df,
+            column_config={
+                "Examen": st.column_config.TextColumn("Nom de l'Examen", disabled=True, help="Liste des examens requis"),
+                "Fait": st.column_config.CheckboxColumn("Examen Fait ?", required=True),
+                "Non Fait": st.column_config.CheckboxColumn("Examen Non Fait ?", required=True),
+            },
+            hide_index=True,
+            use_container_width=True, # Pour que le tableau prenne toute la largeur
+            key="medical_exams_editor"
+        )
+
+        # Logique pour s'assurer qu'une seule case est cochée par ligne (Fait / Non Fait)
+        # On ne lance cette logique que si l'utilisateur a réellement fait une modification.
+        if not edited_df.equals(st.session_state.medical_exams_df):
+            # On parcourt chaque ligne pour voir où le changement a eu lieu
+            for i in edited_df.index:
+                old_row = st.session_state.medical_exams_df.loc[i]
+                new_row = edited_df.loc[i]
+                
+                # Cas 1: L'utilisateur a coché "Fait"
+                if new_row['Fait'] and not old_row['Fait']:
+                    edited_df.at[i, 'Non Fait'] = False # On décoche automatiquement "Non Fait"
+                
+                # Cas 2: L'utilisateur a coché "Non Fait"
+                elif new_row['Non Fait'] and not old_row['Non Fait']:
+                    edited_df.at[i, 'Fait'] = False # On décoche automatiquement "Fait"
+                
+                # Cas 3 (sécurité): Si les deux sont décochés, on remet "Non Fait" par défaut
+                elif not new_row['Fait'] and not new_row['Non Fait']:
+                     edited_df.at[i, 'Non Fait'] = True
+
+            # On met à jour le statut dans la session et on rafraîchit l'écran
+            st.session_state.medical_exams_df = edited_df
+            st.rerun()
+            
+        # (Optionnel) Afficher un résumé ou une progression
+        st.write("---")
+        nb_faits = edited_df['Fait'].sum()
+        total_examens = len(edited_df)
+        st.metric(
+            label="Progression des Examens",
+            value=f"{nb_faits} / {total_examens}",
+            delta=f"{round((nb_faits/total_examens)*100)} %" if total_examens > 0 else "0 %"
+        )
+import streamlit as st
+import pandas as pd
+import os
+
+# --- Éléments de Simulation (à remplacer par vos vraies données) ---
+MINISTERE_DOCS_LIST = [
+    "Rapport médical d'hospitalisation",
+    "Certificat médical",
+    "Acte de mariage",
+    "CIN légalisé père",
+    "CIN légalisé mère",
+    "Engagement des parents en arabe - donneur",
+    "Engagement des parents en arabe - receveur",
+    "Extrait d'acte de naissance - donneur",
+    "Extrait d'acte de naissance - receveur"
+]
+
+# Simule votre fonction pour sauvegarder un fichier (à réutiliser)
+def save_uploaded_file(uploaded_file, sub_directory):
+    save_path = os.path.join("uploads", sub_directory)
+    os.makedirs(save_path, exist_ok=True)
+    file_path = os.path.join(save_path, uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return file_path
+
+# Simule l'initialisation de st.session_state pour le test
+if 'receveur_ipp' not in st.session_state:
+    st.session_state.receveur_ipp = "USER_12345"
+if 'accord_ministere' not in st.session_state:
+    st.session_state.accord_ministere = "En cours"
+# --- Fin des Éléments de Simulation ---
+
+
+def render_ministere_page():
+    """
+    Affiche la page du dossier Ministère avec un tableau de suivi, un champ
+    de téléversement unique et le statut de l'accord.
+    """
+    st.markdown('<div class="page-header"><h1><i class="fas fa-landmark"></i> Dossier Ministère</h1><p>Suivi de l\'accord du ministère et documents associés.</p></div>', unsafe_allow_html=True)
+
+    # --- Section 1: Statut de l'Accord (gardée comme demandé) ---
+    with st.container(border=True):
+        st.subheader("Statut de l'Accord du Ministère")
+        current_status = st.session_state.get('accord_ministere', "En cours")
+        st.session_state.accord_ministere = st.selectbox(
+            "Statut de l'accord",
+            ["En cours", "Accordé", "Refusé"],
+            index=["En cours", "Accordé", "Refusé"].index(current_status),
+            key="ministere_accord_status"
+        )
+
+    # --- Section 2: Tableau de Suivi des Documents ---
+    with st.container(border=True):
+        st.subheader("Check-list des Documents Requis")
+        
+        # Vérification essentielle avant de continuer
+        if not st.session_state.get('receveur_ipp'):
+            st.error("Veuillez renseigner l'IPP du receveur à l'étape 1 pour continuer.")
+            return
+
+        st.write("Cochez le statut de chaque document ci-dessous.")
+
+        # Initialisation du DataFrame dans st.session_state
+        if 'ministere_docs_df' not in st.session_state:
+            df_data = {
+                "Document": MINISTERE_DOCS_LIST,
+                "Présent": [False] * len(MINISTERE_DOCS_LIST),
+                "Absent": [True] * len(MINISTERE_DOCS_LIST)
+            }
+            st.session_state.ministere_docs_df = pd.DataFrame(df_data)
+
+        # Affichage du tableau éditable
+        edited_df = st.data_editor(
+            st.session_state.ministere_docs_df,
+            column_config={
+                "Document": st.column_config.TextColumn("Nom du Document", disabled=True),
+                "Présent": st.column_config.CheckboxColumn("Document Présent ?", required=True),
+                "Absent": st.column_config.CheckboxColumn("Document Absent ?", required=True),
+            },
+            hide_index=True,
+            use_container_width=True,
+            key="ministere_docs_editor"
+        )
+
+        # Logique pour s'assurer qu'une seule case est cochée par ligne
+        if not edited_df.equals(st.session_state.ministere_docs_df):
+            for i in edited_df.index:
+                old_row = st.session_state.ministere_docs_df.loc[i]
+                new_row = edited_df.loc[i]
+                
+                if new_row['Présent'] and not old_row['Présent']:
+                    edited_df.at[i, 'Absent'] = False
+                elif new_row['Absent'] and not old_row['Absent']:
+                    edited_df.at[i, 'Présent'] = False
+                elif not new_row['Présent'] and not new_row['Absent']:
+                     edited_df.at[i, 'Absent'] = True
+
+            st.session_state.ministere_docs_df = edited_df
+            st.rerun()
+
+    # --- Section 3: Téléversement des Fichiers ---
+    with st.container(border=True):
+        st.subheader("Téléverser les Documents")
+
+        docs_a_fournir = edited_df[edited_df["Présent"]]["Document"].tolist()
+
+        if not docs_a_fournir:
+            st.info("Aucun document n'est marqué comme 'Présent'. Cochez la case correspondante dans le tableau pour activer le téléversement.")
+        else:
+            st.write("Veuillez joindre les fichiers pour les documents suivants :")
+            st.markdown("\n".join([f"- **{doc_name}**" for doc_name in docs_a_fournir]))
+            
+            uploaded_files = st.file_uploader(
+                "Glissez et déposez tous les documents nécessaires ici",
+                type=['pdf', 'jpg', 'png', 'jpeg'],
+                accept_multiple_files=True,
+                key="ministere_multi_uploader"
+            )
+
+            if uploaded_files:
+                st.write("---")
+                st.success(f"{len(uploaded_files)} fichier(s) ont été chargés.")
+                for file in uploaded_files:
+                    saved_path = save_uploaded_file(file, "ministere")
+                    st.write(f"✅ Document '{file.name}' sauvegardé dans `{saved_path}`")
 
 def render_organisme_page():
-    st.markdown('<div class="page-header"><h1><i class="fas fa-hands-helping"></i> Dossier Organisme Payeur</h1><p>Suivi de l\'accord de l\'organisme payeur.</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="page-header"><h1><i class="fas fa-hands-helping"></i> Accord Organisme </h1><p>Suivi de l\'accord de l\'organisme payeur.</p></div>', unsafe_allow_html=True)
     with st.container(border=True):
         st.subheader("Accord de l'Organisme")
+        st.session_state.organisme_accord = st.selectbox("Organisme", ["PAYANT", "CNAM", "CNOPS", "AXA", "FAR- Sociales", "Autre"], index=["PAYANT", "CNAM", "CNOPS", "AXA", "FAR- Sociales", "Autre"].index(st.session_state.receveur_organisme))
         st.session_state.organisme_accord_statut = st.selectbox("Statut de l'accord", ["En cours", "Accordé", "Refusé"], index=["En cours", "Accordé", "Refusé"].index(st.session_state.organisme_accord_statut))
         st.session_state.organisme_accord_date_validation = st.date_input("Date de validation de l'accord", st.session_state.organisme_accord_date_validation)
-        if not st.session_state.receveur_ipp: st.error("Veuillez renseigner l'IPP du receveur à l'étape 1 pour joindre un fichier.")
-        else:
-            if st.session_state.get('organisme_accord_document_upload') and isinstance(st.session_state.get('organisme_accord_document_upload'), str):
-                st.success(f"Fichier existant: '{os.path.basename(st.session_state['organisme_accord_document_upload'])}'")
-            uploaded_file = st.file_uploader("Joindre/Remplacer le document de l'accord", type=['pdf', 'jpg', 'png'], key="uploader_organisme_accord")
-            if uploaded_file:
-                st.session_state.organisme_accord_document_upload = save_uploaded_file(uploaded_file, "organisme")
-                st.rerun()
+      
 
 def render_confirmation_page():
     st.markdown('<div class="page-header"><h1><i class="fas fa-check-circle"></i> Confirmation et Soumission</h1><p>Vérifiez les informations avant de finaliser le dossier.</p></div>', unsafe_allow_html=True)
